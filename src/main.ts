@@ -1,12 +1,25 @@
-import { enableProdMode } from '@angular/core';
+import { DoBootstrap, NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { UpgradeModule } from '@angular/upgrade/static';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import AppJS from './appJs.module';
+import { AppAngularModule } from './app/app.module';
 
-import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
-
-if (environment.production) {
-  enableProdMode();
+@NgModule({
+  imports: [
+    BrowserModule,
+    UpgradeModule
+  ]
+})
+export class AppModule implements DoBootstrap {
+  constructor(private upgrade: UpgradeModule) { }
+  ngDoBootstrap() {
+    this.upgrade.bootstrap(document.body, [AppJS.name], { strictDi: true });
+  }
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+//bootstrap angularJs module
+platformBrowserDynamic().bootstrapModule(AppModule);
+
+//bootstrap new angular module
+platformBrowserDynamic().bootstrapModule(AppAngularModule);
